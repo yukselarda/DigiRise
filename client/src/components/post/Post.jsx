@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Card, CardMedia, CardContent, CardActions, Avatar, Typography, Button, IconButton, Modal,CardHeader} from '@mui/material';
+  Card, CardMedia, CardContent, CardActions, Avatar, Typography, IconButton, Skeleton, CardHeader
+} from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import CommentModal from './CommentModal';
 import { Link } from 'react-router-dom';
-import './post.css'; // Your existing Post.css (updated below)
-
+import axios from 'axios';
+import './post.css'
 
 function Post({ post }) {
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const handleCommentClick = () => {
     setIsModalOpen(true);
@@ -21,26 +24,84 @@ function Post({ post }) {
 
   const handleCommentSubmit = (comment) => {
     console.log('Yorum gönderildi:', comment);
+    // Handle comment submission logic here
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    // Check if post and userId are defined
+    if (post && post.userId) {
+      setIsLoading(false);
+    } else {
+      console.error("Post or userId data is missing:", post);
+      // Handle the case where post or userId is undefined
+      // You can set a default image or show an error message here
+    }
+  }, [post]);
+
+
 
   return (
     <Card className="post-card">
+      {/* Image */}
+      {isLoading ? (
+        <Skeleton variant="rectangular" height={280} />
+      ) : (
+        <CardMedia
+          component="img"
+          height="280"
+          image={`http://localhost:5000/${post.img}`}
+          alt="post-img"
+        />
+      )}
+
       <CardHeader
-        avatar={<Avatar src="path-to-profile-picture.jpg" />}
-        title={<Link to={`/user/${post.userId}`}>{post.username}</Link>}
+        avatar={
+          isLoading || !post.userId || !post.userId.img ? (
+            <Skeleton variant="circular" width={40} height={40} />
+          ) : (
+            <Avatar
+              src={`http://localhost:5000/${post.userId.img}`}
+              alt={post.username}
+            />
+          )
+        }
+        title={
+          isLoading || !post.userId ? (
+            <Skeleton variant="text" width={150} />
+          ) : (
+            <Link to={`/user/${post.userId._id}`}>
+              {post.username}
+            </Link>
+          )
+        }
+
+        subheader={
+          isLoading ? (
+            <Skeleton variant="text" width={200} />
+          ) : (
+            <>
+              <Typography variant="body2" color="text.secondary">
+                {new Date(post.createdAt).toLocaleDateString()}
+              </Typography>
+            </>
+          )
+        }
       />
-      <CardMedia 
-      className='post-image'
-        component="img"
-        height="auto"
-        image={`http://localhost:5000/${post.img}`}
-        alt="post-img"
-      />
+
+      {/* Comment */}
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {post.comment}
-        </Typography>
+        {isLoading ? (
+          <Skeleton variant="text" />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            {post.comment}
+          </Typography>
+        )}
       </CardContent>
+
+      {/* Action Buttons */}
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteBorderIcon />

@@ -11,7 +11,6 @@ function CreatePostPage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Cookie'den kullanıcı bilgilerini al
     const userData = Cookies.get('user');
     if (userData) {
       setUser(JSON.parse(userData));
@@ -33,13 +32,15 @@ function CreatePostPage() {
     const formData = new FormData();
     formData.append('comment', comment);
     formData.append('img', image);
+    // Add user ID and username to the form data
     formData.append('userId', user._id);
+    formData.append('username', user.username);
 
     try {
       const response = await axios.post('http://localhost:5000/api/posts/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${user.token}` 
+          'Authorization': `Bearer ${user.token}`
         }
       });
 
@@ -79,7 +80,7 @@ function CreatePostPage() {
         </button>
       </form>
 
-      {user && <p className="user-info">Paylaşan: {user.username}</p>}
+      {user && <p className="user-info">Paylaşan: {user.username} (ID: {user._id})</p>}
 
       <ToastContainer />
     </div>

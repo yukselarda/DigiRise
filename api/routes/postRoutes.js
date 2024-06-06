@@ -13,18 +13,20 @@ const storage = multer.diskStorage({
     }
 });
 
+
 const upload = multer({ storage: storage });
 
+
 router.post("/add", upload.single('img'), async (req, res) => {
-    const { comment } = req.body;
+    const { comment, userId, username } = req.body;
     const imgPath = req.file.path;
 
-    if (!imgPath || !comment) {
+    if (!imgPath || !comment || !userId || !username) {
         return res.status(400).json({ message: "Gerekli alanlar eksik" });
     }
 
     try {
-        const newPost = new Post({ img: imgPath, comment });
+        const newPost = new Post({ img: imgPath, comment, userId, username });
         const savedPost = await newPost.save();
         res.status(201).json(savedPost);
     } catch (error) {
@@ -35,9 +37,10 @@ router.post("/add", upload.single('img'), async (req, res) => {
 
 router.get("/get-all", async (req, res) => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().populate("userId"); // userId alanını doldur
         res.status(200).json(posts);
     } catch (error) {
+        console.error('Error fetching posts:', error); // Log the error
         res.status(500).json({ message: error.message });
     }
 });
