@@ -24,19 +24,15 @@ function Post({ post }) {
 
   const handleCommentSubmit = (comment) => {
     console.log('Yorum gönderildi:', comment);
-    // Handle comment submission logic here
   };
 
   useEffect(() => {
     setIsLoading(true);
 
-    // Check if post and userId are defined
     if (post && post.userId) {
       setIsLoading(false);
     } else {
       console.error("Post or userId data is missing:", post);
-      // Handle the case where post or userId is undefined
-      // You can set a default image or show an error message here
     }
   }, [post]);
 
@@ -71,7 +67,7 @@ function Post({ post }) {
           isLoading || !post.userId ? (
             <Skeleton variant="text" width={150} />
           ) : (
-            <Link to={`/user/${post.userId._id}`}>
+            <Link to={`/user/${post.userId.username}`}>
               {post.username}
             </Link>
           )

@@ -14,9 +14,18 @@ body {
 }
 
 .homepage {
-  font-family: Arial, sans-serif;
-  background-color: #fafafa;
+  display: flex; /* Esnek düzen kullanarak öğeleri hizalayabiliriz */
+  flex-direction: column; /* Öğeleri dikey olarak hizala */
+  min-height: 100vh; /* Sayfanın en az viewport yüksekliğinde olmasını sağlar */
 }
+
+.loader-container {
+  display: flex;
+  justify-content: center; /* Yatayda ortalama */
+  align-items: center; /* Dikeyde ortalama */
+  flex-grow: 1; /* Kalan alanı kaplamasını sağlar */
+}
+
 
 .header {
   background-color: #fff;
@@ -67,4 +76,11 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;  
+  align-items: center;       
+  min-height: 200px;      
 }

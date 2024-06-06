@@ -1,63 +1,102 @@
-.post-form {
+/* post.css (Dark Mode) */
+
+.post-page {
     display: flex;
     flex-direction: column;
-    width: 400px;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #212529; /* Dark gray background */
+    color: #f8f9fa; /* Light text color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+  }
+  
+  .post-form {
+    display: flex;
+    flex-direction: column;
+    width: 450px; /* Slightly wider form */
     padding: 30px;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    background-color: #f4f4f4;
-    /* Daha yumuşak bir arka plan rengi */
-    transition: box-shadow 0.3s ease;
-    /* Gölge geçişi */
-}
-
-.post-form:focus-within {
-    /* Form içinde bir elemana focuslandığında */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-    /* Daha belirgin gölge */
-}
-
-.description-input,
-.location-input,
-.image-input {
+    border: 1px solid #495057; /* Slightly lighter border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    background-color: #343a40; /* Darker gray for the form */
+  }
+  
+  .description-input {
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid #e2e2e2;
+    border: 1px solid #495057;
     border-radius: 8px;
     font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
+    height: 120px;
+    resize: vertical;
     transition: border-color 0.3s ease;
-    /* Kenarlık rengi geçişi */
-}
-
-.description-input:focus,
-.location-input:focus,
-.image-input:focus {
-    border-color: #007bff;
-    /* Focus olduğunda mavi kenarlık */
+    background-color: #282c34; /* Even darker background for inputs */
+    color: #dee2e6; /* Light gray text in inputs */
+  }
+  
+  .description-input:focus {
+    border-color: #6c757d; /* Medium gray border on focus */
     outline: none;
-    /* Varsayılan focus stilini kaldır */
-}
-
-.submit-button {
-    background-color: #28a745;
-    /* Yeşil renk */
+  }
+  
+  .image-input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #495057;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background-color: #282c34; /* Even darker background for inputs */
+    color: #dee2e6; /* Light gray text in inputs */
+  }
+  
+  .image-input:focus {
+    border-color: #6c757d; /* Medium gray border on focus */
+    outline: none;
+  }
+  
+  .submit-button {
+    background-color: #0056b3; /* Darker blue */
     color: white;
     padding: 15px 30px;
-    /* Daha geniş buton */
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
-    /* Daha büyük font */
     font-weight: 600;
-    /* Daha kalın font */
-    transition: background-color 0.3s ease;
-    align-self: flex-end;
-}
-
-.submit-button:hover {
-    background-color: #218838;
-}
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Slightly darker shadow */
+    align-self: flex-end; /* Align button to the right */
+  }
+  
+  .submit-button:hover {
+    background-color: #004080; /* Even darker blue on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+  }
+  
+  .loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  /* User Info Styles */
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px; /* Slightly smaller font size */
+    color: #adb5bd; /* Lighter gray for user info */
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  

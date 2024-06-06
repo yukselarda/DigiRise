@@ -3,6 +3,7 @@ import axios from 'axios';
 import Post from '../../components/post/Post';
 import Header from '../../components/headers/Header';
 import './home.css';
+import { Puff } from 'react-loader-spinner';
 
 function HomePage() {
   const [posts, setPosts] = useState([]);
@@ -13,10 +14,10 @@ function HomePage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/posts/get-all');
-        console.log('API Response:', response.data); // API yanıtını konsola yazdır
+        console.log('API Response:', response.data);
         setPosts(response.data);
       } catch (err) {
-        console.error('Error fetching posts:', err.response); // Hata ayrıntılarını konsola yazdır
+        console.error('Error fetching posts:', err.response); 
         setError('Gönderiler yüklenirken bir hata oluştu.');
       } finally {
         setLoading(false);
@@ -31,7 +32,15 @@ function HomePage() {
       <Header />
 
       {loading ? (
-        <p>Gönderiler yükleniyor...</p>
+        <div className="loader-container">
+          <Puff
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={3000}
+          />
+        </div>
+
       ) : error ? (
         <p>{error}</p>
       ) : (
@@ -43,6 +52,7 @@ function HomePage() {
       )}
     </div>
   );
+
 }
 
 export default HomePage;
