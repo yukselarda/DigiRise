@@ -22,11 +22,10 @@ function SingupPage() {
       });
       console.log(response.data);
       
-      // Kullanıcı bilgilerini cookie'ye kaydet
       Cookies.set('user', JSON.stringify(response.data));
 
-      toast.success('Başarıyla kayıt olundu');
-      navigate("/login");
+      toast.success('Başarıyla Giriş Yapıld');
+      navigate("/home");
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data && error.response.data.error) {

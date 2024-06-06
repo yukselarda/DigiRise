@@ -5,7 +5,7 @@ import SignupPage from './pages/singup/SingupPage';
 import HomePage from './pages/Home/HomePage';
 import PostPage from './pages/post/CreatePostPage';
 import UserProfilePage from './pages/profilePage/UserProfilePage';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute'; // Import the PrivateRoute component
 import './App.css';
 
 function App() {

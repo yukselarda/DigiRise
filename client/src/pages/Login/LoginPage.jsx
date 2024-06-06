@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useSpring, animated } from '@react-spring/web';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './index.css';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../../Context/Context';
+import './index.css'; // Make sure this path is correct
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -13,12 +13,15 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const response = await axios.post('http://localhost:5000/api/auth/register', {
         username,
@@ -26,10 +29,14 @@ function LoginPage() {
         password,
         customername: fullName,
       });
-      console.log(response.data);
-      toast.success('Kullanıcı başarıyla kaydedildi');
+
+      toast.success('Kayıt başarılı!');
       login(response.data.user, rememberMe);
-      navigate("/home");
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate("/home");
+      }, 1500); 
+
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data && error.response.data.error) {
@@ -37,6 +44,7 @@ function LoginPage() {
       } else {
         toast.error('Kullanıcı kaydedilirken hata oluştu');
       }
+      setIsLoading(false); 
     }
   };
 
@@ -48,6 +56,12 @@ function LoginPage() {
 
   return (
     <div className="App">
+      {isLoading && (
+        <div className="overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
+
       <animated.div style={fadeIn} className="signup-container">
         <h2>DigiRise</h2>
         <form onSubmit={handleSubmit}>
@@ -91,10 +105,11 @@ function LoginPage() {
           <button type="submit">Kayıt Ol</button>
         </form>
         <div className="alternative">
-          Zaten bir hesabın var mı? <a href="/">Giriş yap</a> 
+          Zaten bir hesabın var mı? <a href="/">Giriş yap</a>
         </div>
       </animated.div>
-      <ToastContainer />
+
+      <ToastContainer position="top-right" /> 
     </div>
   );
 }
