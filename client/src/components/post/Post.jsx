@@ -15,7 +15,6 @@ function Post({ post }) {
   };
 
   const handleCommentSubmit = (comment) => {
-    // Yorum gönderme işlemi burada gerçekleştirilebilir.
     console.log('Yorum gönderildi:', comment);
   };
 

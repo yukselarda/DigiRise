@@ -1,58 +1,70 @@
 const User = require("../models/User");
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); 
+    },
+});
+
+const upload = multer({ storage });
 
 //! register
-router.post("/register", async (req, res) => {
+router.post("/register", upload.single('img'), async (req, res) => {
     try {
         const { username, email, password, customername } = req.body;
+        const img = req.file ? req.file.path : null;
 
-        const existingCustomername = await User.findOne({ customername });
-        const existingPassword = await User.findOne({ password: await bcrypt.hash(password, 10) });
-
-        if (existingCustomername) {
+        // Kullanıcı adı ve şifre kontrolü
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
             return res.status(400).json({ error: 'Bu kullanıcı adı zaten mevcut. Lütfen farklı bir isim kullanın.' });
         }
 
-        if (existingPassword) {
-            return res.status(400).json({ error: 'Bu şifre zaten kullanılıyor. Lütfen farklı bir şifre kullanın.' });
-        }
-
+        // Yeni kullanıcı oluşturma
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = new User({
             username,
             email,
             customername,
-            password: hashedPassword,
+            password: hashedPassword, // Plain text parolayı hashlemek
+            img,
         });
         await newUser.save();
         res.status(200).json("Yeni Hesap Oluşturuldu!");
     } catch (error) {
-        res.status(400).json(error);
+        res.status(400).json({ error: 'Hesap oluşturulurken bir hata oluştu.' });
     }
 });
 
-//! singup
-router.post("/singup", async (req, res) => {
+//! login
+router.post("/", async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.body.username });
+        const { username, password } = req.body;
+
+        // Kullanıcıyı bul
+        const user = await User.findOne({ username });
         if (!user) {
-            return res.status(404).send({ error: "Kişi Bulunamadı!" }); 
+            return res.status(404).json({ error: "Hatalı Bir Bilgi Girdiniz!" }); 
         }
 
-        const validPassword = await bcrypt.compare(
-            req.body.password,
-            user.password
-        );
-
+        // Parolayı kontrol et
+        const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-            res.status(403).json("Invalid password!");
-        } else {
-            res.status(200).json(user);
+            return res.status(403).json({ error: "Hatalı Bir Bilgi Girdiniz!" });
         }
+
+        // Başarılı giriş
+        res.status(200).json(user);
     } catch (error) {
-        res.status(400).json(error);
+        res.status(400).json({ error: 'Giriş yapılırken bir hata oluştu.' });
     }
 });
 

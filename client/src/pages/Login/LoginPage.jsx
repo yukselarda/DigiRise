@@ -14,27 +14,38 @@ function LoginPage() {
   const [fullName, setFullName] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('customername', fullName);
+    formData.append('img', image);
+
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
-        username,
-        email,
-        password,
-        customername: fullName,
+      const response = await axios.post('http://localhost:5000/api/auth/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
       toast.success('Kayıt başarılı!');
       login(response.data.user, rememberMe);
       setTimeout(() => {
         setIsLoading(false);
-        navigate("/home");
+        navigate("/");
       }, 1500); 
 
     } catch (error) {
@@ -92,6 +103,12 @@ function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="image-input"
           />
           <div className="remember-me">
             <input
