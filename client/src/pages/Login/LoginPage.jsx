@@ -28,7 +28,7 @@ function LoginPage() {
       });
       console.log(response.data);
       toast.success('Kullanıcı başarıyla kaydedildi');
-      login(response.data.user, rememberMe); // Kullanıcı ve beni hatırla bilgisini AuthContext'e aktar
+      login(response.data.user, rememberMe);
       navigate("/home");
     } catch (error) {
       console.error(error);
@@ -79,7 +79,7 @@ function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <div className="remember-me"> {/* Beni Hatırla checkbox'ı eklendi */}
+          <div className="remember-me">
             <input
               type="checkbox"
               id="rememberMe"
@@ -91,7 +91,7 @@ function LoginPage() {
           <button type="submit">Kayıt Ol</button>
         </form>
         <div className="alternative">
-          Zaten bir hesabın var mı? <a href="/sing-up">Giriş yap</a> 
+          Zaten bir hesabın var mı? <a href="/">Giriş yap</a> 
         </div>
       </animated.div>
       <ToastContainer />

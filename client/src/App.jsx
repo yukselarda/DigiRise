@@ -1,21 +1,44 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/Login/LoginPage';
-import SingupPage from './pages/singup/SingupPage';
+import SignupPage from './pages/singup/SingupPage';
 import HomePage from './pages/Home/HomePage';
-import PostPage from './pages/post/CreatePostPage'
-import UserProfilePage from './pages/profilePage/UserProfilePage'
+import PostPage from './pages/post/CreatePostPage';
+import UserProfilePage from './pages/profilePage/UserProfilePage';
+import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/register" element={<LoginPage />}/>
-        <Route path="/" element={<SingupPage />} />
-        <Route path="/home" element={<HomePage />}/>
-        <Route path="/post" element={<PostPage />}/>
-        <Route path="/profile" element={<UserProfilePage />} />
+        <Route path="/register" element={<LoginPage />} />
+        <Route path="/" element={<SignupPage />} />
+        
+        <Route 
+          path="/home" 
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/post" 
+          element={
+            <PrivateRoute>
+              <PostPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <PrivateRoute>
+              <UserProfilePage />
+            </PrivateRoute>
+          } 
+        />
       </Routes>
     </BrowserRouter>
   );

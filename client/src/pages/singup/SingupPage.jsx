@@ -4,6 +4,7 @@ import { useSpring, animated } from '@react-spring/web';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 import "./singup.css"
 
 function SingupPage() {
@@ -20,6 +21,10 @@ function SingupPage() {
         password,
       });
       console.log(response.data);
+      
+      // Kullanıcı bilgilerini cookie'ye kaydet
+      Cookies.set('user', JSON.stringify(response.data));
+
       toast.success('Başarıyla kayıt olundu');
       navigate("/login");
     } catch (error) {
@@ -60,7 +65,7 @@ function SingupPage() {
           <button type="submit">Giriş Yap</button>
         </form>
         <div className="alternative">
-          Hesabın yok mu? <a href="/">Kayıt Ol</a>
+          Hesabın yok mu? <a href="/register">Kayıt Ol</a>
         </div>
       </animated.div>
       <ToastContainer />

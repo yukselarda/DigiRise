@@ -1,14 +1,22 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './post.css'; // CSS dosyanız (eğer varsa)
-import { AuthContext } from '../../Context/Context';
+import './post.css';
+import Cookies from 'js-cookie';
 
 function CreatePostPage() {
   const [comment, setComment] = useState('');
   const [image, setImage] = useState(null);
-  const { user, isLoading } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Cookie'den kullanıcı bilgilerini al
+    const userData = Cookies.get('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -25,7 +33,7 @@ function CreatePostPage() {
     const formData = new FormData();
     formData.append('comment', comment);
     formData.append('img', image);
-    formData.append('userId', user._id); // user._id kullanımı
+    formData.append('userId', user._id);
 
     try {
       const response = await axios.post('http://localhost:5000/api/posts/add', formData, {
@@ -66,16 +74,12 @@ function CreatePostPage() {
           required
         />
 
-        {!isLoading && (
-          <button type="submit" className="submit-button" disabled={!user}>
-            Paylaş
-          </button>
-        )}
+        <button type="submit" className="submit-button" disabled={!user}>
+          Paylaş
+        </button>
       </form>
 
       {user && <p className="user-info">Paylaşan: {user.username}</p>}
-
-      {isLoading && <p>Yükleniyor...</p>}
 
       <ToastContainer />
     </div>

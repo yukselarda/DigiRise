@@ -1,7 +1,7 @@
-// src/components/Post.jsx
 import React, { useState } from 'react';
 import "./post.css";
 import CommentModal from './CommentModal';
+import { Link } from 'react-router-dom';
 
 function Post({ post }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +23,11 @@ function Post({ post }) {
     <div className="post-card">
       <div className="post-header">
         <img src="path-to-profile-picture.jpg" alt="profile" />
-        <h3>{post.username}</h3>
+        <h3>
+          <Link to={`/user/${post.userId}`}>
+            {post.username}
+          </Link>
+        </h3>
       </div>
       <img className="post-image" src={`http://localhost:5000/${post.img}`} alt="post-img" />
       <div className="post-details">

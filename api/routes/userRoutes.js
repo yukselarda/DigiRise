@@ -24,7 +24,7 @@ router.get("/get-by-username", async (req, res) => {
       const user = await User.findOne({ username: { $regex: username, $options: "i" } });
 
       if (!user) {
-        return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+        return res.status(404).json({ message: "Kullanıcı bulunamadı!" });
       }
 
       res.status(200).json(user);
