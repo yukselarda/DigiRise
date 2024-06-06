@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import "./post.css";
+import {
+  Card, CardMedia, CardContent, CardActions, Avatar, Typography, Button, IconButton, Modal,CardHeader} from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import CommentModal from './CommentModal';
 import { Link } from 'react-router-dom';
+import './post.css'; // Your existing Post.css (updated below)
+
 
 function Post({ post }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,29 +24,38 @@ function Post({ post }) {
   };
 
   return (
-    <div className="post-card">
-      <div className="post-header">
-        <img src="path-to-profile-picture.jpg" alt="profile" />
-        <h3>
-          <Link to={`/user/${post.userId}`}>
-            {post.username}
-          </Link>
-        </h3>
-      </div>
-      <img className="post-image" src={`http://localhost:5000/${post.img}`} alt="post-img" />
-      <div className="post-details">
-        <p>{post.comment}</p>
-      </div>
-      <div className="post-footer">
-        <button>❤️ Beğen</button>
-        <button onClick={handleCommentClick}>💬 Yorum Yap</button>
-      </div>
-      <CommentModal 
+    <Card className="post-card">
+      <CardHeader
+        avatar={<Avatar src="path-to-profile-picture.jpg" />}
+        title={<Link to={`/user/${post.userId}`}>{post.username}</Link>}
+      />
+      <CardMedia 
+      className='post-image'
+        component="img"
+        height="auto"
+        image={`http://localhost:5000/${post.img}`}
+        alt="post-img"
+      />
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {post.comment}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteBorderIcon />
+        </IconButton>
+        <IconButton aria-label="comment" onClick={handleCommentClick}>
+          <ModeCommentOutlinedIcon />
+        </IconButton>
+      </CardActions>
+
+      <CommentModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleCommentSubmit}
       />
-    </div>
+    </Card>
   );
 }
 
