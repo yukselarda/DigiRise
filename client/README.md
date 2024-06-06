@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# DigiRise
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+DigiRise, kullanıcıların veri girişini yönetmesine ve çeşitli dijital hizmetleri takip etmesine olanak tanıyan bir web uygulamasıdır. Bu proje, bir API ve bir istemci uygulamasından oluşur.
 
-## Available Scripts
+## Proje Yapısı
 
-In the project directory, you can run:
+ **api**: Sunucu tarafı kodları içerir.
+  - **config**: Konfigürasyon dosyaları.
+  - **controllers**: İstekleri işleyen ve yanıtları dönen denetleyiciler.
+  - **middlewares**: Ara katman yazılımları.
+  - **models**: Veritabanı modelleri.
+  - **routes**: API uç noktaları.
+  - **uploads**: Yüklenen dosyaların depolandığı klasör.
+  - **.env**: Çevresel değişkenler.
+  - **package.json**: API bağımlılıkları ve komutları.
+  - **server.js**: Uygulamanın başlangıç dosyası.
+  
+- **client**: İstemci tarafı kodları içerir.
+  - **public**: Genel erişilebilir statik dosyalar.
+  - **src**: React uygulama kodları.
+    - **components**
+      - **headers**
+        - `Header.jsx`
+      - **post**
+        - `CommentModal.jsx`
+        - `Post.jsx`
+        - `post.css`
+        - `Navbar.jsx`
+        - `PostItem.jsx`
+        - `ProfileHeader.jsx`
+        - `ProfilePosts.jsx`
+        - `Story.jsx`
+    - **Context**
+      - `Context.js`
+    - **pages**
+      - **Home**
+        - `HomePage.jsx`
+        - `home.css`
+      - **Login**
+        - `LoginPage.jsx`
+        - `login.css`
+      - **Post**
+        - `CreatePostPage.jsx`
+        - `post.css`
+      - **Profile**
+        - `UserProfilePage.jsx`
+        - `profile.css`
+      - **Signup**
+        - `SignupPage.jsx`
+        - `signup.css`
+    - **App.css**: Uygulamanın stil dosyası.
+    - **App.jsx**: Ana uygulama bileşeni.
+    - **index.js**: Uygulamanın giriş dosyası.
+    - **setupTests.js**: Test kurulum dosyası.
+    - **logo.svg**: Uygulama logosu.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Başlangıç
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Gereksinimler
 
-### `npm test`
+- Node.js
+- npm veya yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Kurulum
 
-### `npm run build`
+Projenin kök dizininde aşağıdaki komutları çalıştırarak hem sunucu hem de istemci bağımlılıklarını yükleyin:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### API bağımlılıklarını yükleyin
+cd api
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### İstemci bağımlılıklarını yükleyin
+cd ../client
+npm install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Çalıştırma
 
-### `npm run eject`
+- **Sunucu**: API sunucusunu başlatmak için:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+cd api
+node --watch server
+ 
+ - Bu komut, sunucuyu başlatır ve belirtilen port üzerinde dinlemeye başlar.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **İstemci**: React uygulamasını başlatmak için:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+cd client
+npm start
+ 
+ - Bu komut, istemci uygulamasını başlatır ve tarayıcıda otomatik olarak açılır.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Kullanılan Teknolojiler
 
-## Learn More
+ **İstemci**
+  - **React**: Kullanıcı arayüzü oluşturmak için.
+  - **Redux**: İstDurum yönetimi için.
+  - **React Router**: Sayfa yönlendirmeleri için..
+  - **Axios**: API istekleri için.
+  - **Ant Design**: UI bileşenleri için.
+  - **React Toastify**: Bildirimler için.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+ **Sunucu**
+  - **Express**: Sunucu çatısı.
+  - **Mongoose**: MongoDB etkileşimleri için.
+  - **Multer**: Dosya yüklemeleri için.
+  - **Cors**: Çapraz kaynak paylaşımı için.
+  - **Body-Parser**:İstek gövdesi ayrıştırma için.
+  - **Dotenv**: Çevresel değişken yönetimi için.
+  - **Bcryptjs**: Şifreleme için.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  ## Proje Komutları
 
-### Code Splitting
+ **API**
+  - **node --watch server**: Sunucuyu başlatır.
+  - **npm run dev**: Nodemon ile sunucuyu başlatır.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+ **İstemci**
+  - **npm start**: Sunucuyu başlatır.
+  - **npm run dev**: Nodemon ile sunucuyu başlatır.
+  - **npm test**: Testleri çalıştırır.
+  - **npm run dev**: React Scripts konfigürasyonunu dışarı çıkarır.
 
-### Analyzing the Bundle Size
+## Lisans
+Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için LICENSE dosyasına bakabilirsiniz.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Bu güncellenmiş `README.md` dosyası, DigiRise projenizin yapısını ve kullanılacak komutları daha ayrıntılı bir şekilde açıklamaktadır. Başka eklemek istediğiniz bir şey varsa, lütfen bana bildirin.
