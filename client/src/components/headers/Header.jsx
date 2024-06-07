@@ -16,7 +16,7 @@ function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link to="">
+                        <Link to="/search">
                             <i className="fas fa-search"></i> Ara
                         </Link>
                     </li>

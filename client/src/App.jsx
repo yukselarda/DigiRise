@@ -6,6 +6,7 @@ import HomePage from './pages/Home/HomePage';
 import PostPage from './pages/post/CreatePostPage';
 import UserProfilePage from './pages/profilePage/UserProfilePage';
 import UpdateProfilePage from './pages/Settings/UpdateProfilePage';
+import SearchPage from './pages/Search/SearchPage';
 import PrivateRoute from './components/PrivateRoute'; // Import the PrivateRoute component
 import './App.css';
 
@@ -46,6 +47,16 @@ function App() {
           element={
             <PrivateRoute>
               <UpdateProfilePage />
+            </PrivateRoute>
+          }
+
+        />
+
+        <Route
+          path="/search"
+          element={
+            <PrivateRoute>
+              <SearchPage />
             </PrivateRoute>
           }
 
