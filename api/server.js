@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const app = express();
 const cors = require("cors");
 const path = require("path");
+const nodemailer = require('nodemailer');
 const port = 5000;
 
 const authRoute = require("./routes/authRoutes");
@@ -11,6 +12,7 @@ const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 
 dotenv.config();
+console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
 
 const connect = async () => {
     try {
@@ -50,13 +52,10 @@ connectWithRetry();
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
-
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
-app.use("/api/posts", postRoute);
+app.use("/api/posts", postRoute);   
 
 app.listen(port, () => {
     connect();

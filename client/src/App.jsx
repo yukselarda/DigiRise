@@ -5,6 +5,7 @@ import SignupPage from './pages/singup/SingupPage';
 import HomePage from './pages/Home/HomePage';
 import PostPage from './pages/post/CreatePostPage';
 import UserProfilePage from './pages/profilePage/UserProfilePage';
+import UpdateProfilePage from './pages/Settings/UpdateProfilePage';
 import PrivateRoute from './components/PrivateRoute'; // Import the PrivateRoute component
 import './App.css';
 
@@ -14,30 +15,40 @@ function App() {
       <Routes>
         <Route path="/register" element={<LoginPage />} />
         <Route path="/" element={<SignupPage />} />
-        
-        <Route 
-          path="/home" 
+
+        <Route
+          path="/home"
           element={
             <PrivateRoute>
               <HomePage />
             </PrivateRoute>
-          } 
+          }
         />
-        <Route 
-          path="/post" 
+        <Route
+          path="/post"
           element={
             <PrivateRoute>
               <PostPage />
             </PrivateRoute>
-          } 
+          }
         />
-        <Route 
-          path="/profile" 
+        <Route
+          path="/profile"
           element={
             <PrivateRoute>
               <UserProfilePage />
             </PrivateRoute>
-          } 
+          }
+
+        />
+        <Route
+          path="/accounts/edit"
+          element={
+            <PrivateRoute>
+              <UpdateProfilePage />
+            </PrivateRoute>
+          }
+
         />
       </Routes>
     </BrowserRouter>
