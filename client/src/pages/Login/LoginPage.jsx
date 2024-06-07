@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useSpring, animated } from '@react-spring/web';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from '../../Context/Context';
-import './index.css'; // Make sure this path is correct
+import './index.css'; 
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -122,7 +122,7 @@ function LoginPage() {
           <button type="submit">Kayıt Ol</button>
         </form>
         <div className="alternative">
-          Zaten bir hesabın var mı? <a href="/">Giriş yap</a>
+          Zaten bir hesabın var mı? <Link to="/">Giriş yap</Link>
         </div>
       </animated.div>
 

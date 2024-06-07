@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; 
 import './Header.css';
 
 function Header() {
@@ -7,24 +8,49 @@ function Header() {
             <div className="header__logo">
                 <h1>DigiRise</h1>
             </div>
-            <div className="header__search">
-                <input type="text" placeholder="Search" />
-            </div>
-
             <div className="header__icons">
                 <ul>
                     <li>
-                        <a href="">Anasayfa</a>
+                        <Link to="/home">
+                            <i className="fas fa-home"></i> Anasayfa
+                        </Link>
                     </li>
                     <li>
-                        <a href="">Ara</a>
+                        <Link to="">
+                            <i className="fas fa-search"></i> Ara
+                        </Link>
                     </li>
                     <li>
-                        <a href="">Profil</a>
+                        <Link to="">
+                            <i className="fas fa-compass"></i> Keşfet
+                        </Link>
                     </li>
                     <li>
-                        <a href="">Daha Fazla</a>
+                        <Link to="">
+                            <i className="fas fa-envelope"></i> Mesajlar
+                        </Link>
                     </li>
+                    <li>
+                        <Link to="">
+                            <i className="fas fa-bell"></i> Bildirimler
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/post">
+                            <i className="fas fa-plus-square"></i> Oluştur
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="">
+                            <i className="fas fa-user"></i> Profil
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="">
+                            <i className="fas fa-ellipsis-h"></i> Ayarlar
+                        </Link>
+                    </li>
+
                 </ul>
             </div>
         </header>

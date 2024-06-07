@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); 
+        cb(null, Date.now() + path.extname(file.originalname));
     },
 });
 
@@ -44,6 +44,38 @@ router.post("/register", upload.single('img'), async (req, res) => {
     }
 });
 
+
+router.put("/update/:username", upload.single('img'), async (req, res) => {
+    try {
+        const { email, customername, password } = req.body;
+        const updatedUser = {};
+
+        if (email) updatedUser.email = email;
+        if (customername) updatedUser.customername = customername;
+        if (req.file) updatedUser.img = req.file.path;
+
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            updatedUser.password = await bcrypt.hash(password, salt);
+        }
+
+        const updated = await User.findOneAndUpdate(
+            { username: req.params.username },
+            { $set: updatedUser },
+            { new: true }
+        );
+
+        if (!updated) {
+            return res.status(404).json({ error: "Kullanıcı bulunamadı." });
+        }
+
+        res.status(200).json(updated);
+    } catch (err) {
+        res.status(500).json({ error: err.message }); 
+    }
+});
+
+
 //! login
 router.post("/", async (req, res) => {
     try {
@@ -52,7 +84,7 @@ router.post("/", async (req, res) => {
         // Kullanıcıyı bul
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(404).json({ error: "Hatalı Bir Bilgi Girdiniz!" }); 
+            return res.status(404).json({ error: "Hatalı Bir Bilgi Girdiniz!" });
         }
 
         // Parolayı kontrol et

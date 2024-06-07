@@ -1,97 +1,142 @@
-  .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #fff;
-      padding: 10px 20px;
-      border-bottom: 1px solid #dbdbdb;
-  }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
 
-  .header__logo {
-      width: 25%;
-  }
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    background: linear-gradient(45deg, #2C3E50, #1E1F29);
+    color: #E0E0E0;
+    padding: 20px;
+    border-right: 1px solid #34495E;
+    position: fixed;
+    height: 100vh;
+    width: 220px;
+    padding-top: 5rem;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    animation: gradientAnimation 6s ease-in-out infinite alternate;
+}
 
-  .header__logo img {
-      height: 40px;
-  }
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
 
-  .header__search {
-      width: 25%;
-  }
+    50% {
+        background-position: 100% 50%;
+    }
 
-
-  .header__search {
-      position: relative;
-      width: 200px;
-  }
-
-  .header__search input {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #dbdbdb;
-      border-radius: 20px;
-      font-size: 14px;
-      background-color: #fafafa;
-      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  }
-
-  .header__search input::placeholder {
-      color: #999;
-  }
-
-  .header__search input:focus {
-      outline: none;
-      border-color: #a8a8a8;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
 
+/* Logo */
+.header__logo {
+    width: 100%;
+    margin-bottom: 30px;
+    text-align: center;
+}
 
-  .header__icons {
-      width: 35%;
-  }
+.header__logo h1 {
+    margin: 0;
+    font-size: 26px;
+    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.5);
+    /* Beyaz metin gölgesi */
+}
 
-  .header__icons h1 {
-      height: 24px;
-      display: flex;
-      align-items: start;
-      margin-left: 20px;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-  }
+/* Arama Çubuğu */
+.header__search {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
 
-  .header__icons img:hover {
-      transform: scale(1.1);
-  }
+.header__search input {
+    width: 80%;
+    padding: 10px 15px;
+    border: 1px solid #34495E;
+    /* Wet Asphalt */
+    border-radius: 25px;
+    font-size: 14px;
+    background-color: #2C3E50;
+    /* Midnight Blue */
+    color: #ECF0F1;
+    /* Clouds */
+    transition: all 0.3s ease-in-out;
+}
 
-  .header__search input:focus {
-      outline: none;
-      border-color: #a8a8a8;
-  }
+.header__search input::placeholder {
+    color: #95a5a6;
+}
 
-  ul {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-  }
+.header__search input:focus {
+    outline: none;
+    border-color: #6A3093;
+    /* Parlak Mor */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 
-  ul li {
-      list-style-type: none;
-  }
+/* İkonlar */
+.header__icons ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+}
 
-  ul li a{
+.header__icons li {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.header__icons a {
     text-decoration: none;
-    color: black;
-  }
+    color: #ECF0F1;
+    /* Clouds */
+    font-size: 18px;
+    width: 100%;
+    text-align: left;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+    /* Siyah metin gölgesi */
+}
 
-  @media (max-width: 600px) {
-      .header__search {
-          width: 150px;
-      }
+.header__icons a i {
+    margin-right: 10px;
+}
 
+.header__icons a:hover {
+    color: #ECF0F1;
+    /* Clouds */
+    margin-left: .50rem;
+}
 
-      .header__icons img {
-          height: 20px;
-          margin-left: 15px;
-      }
-  }
+/* Responsive Tasarım */
+@media (max-width: 600px) {
+    .header {
+        width: 180px;
+    }
+
+    .header__search input {
+        width: 70%;
+    }
+
+    .header__icons a {
+        font-size: 16px;
+        padding: 8px 15px;
+    }
+}

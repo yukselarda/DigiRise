@@ -1,7 +1,8 @@
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background: #fafafa !important;
+  background: #2c3e50;
+  color: #ecf0f1;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -14,38 +15,31 @@ body {
 }
 
 .homepage {
-  display: flex; /* Esnek düzen kullanarak öğeleri hizalayabiliriz */
-  flex-direction: column; /* Öğeleri dikey olarak hizala */
-  min-height: 100vh; /* Sayfanın en az viewport yüksekliğinde olmasını sağlar */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .loader-container {
   display: flex;
-  justify-content: center; /* Yatayda ortalama */
-  align-items: center; /* Dikeyde ortalama */
-  flex-grow: 1; /* Kalan alanı kaplamasını sağlar */
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 
-
-.header {
-  background-color: #fff;
-  padding: 20px;
-  text-align: center;
-  border-bottom: 1px solid #dbdbdb;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
 .header h1 {
   margin: 0;
   font-size: 2em;
+  color: #ecf0f1;
 }
 
 .profile-section {
   padding: 20px;
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #dbdbdb;
-  background-color: #fff;
+  border-bottom: 1px solid #2c3e50;
+  background-color: #34495e;
 }
 
 .profile-info {
@@ -58,17 +52,18 @@ body {
   height: 150px;
   border-radius: 50%;
   margin-right: 20px;
-  border: 2px solid #dbdbdb;
+  border: 2px solid #2c3e50;
 }
 
 .profile-details h2 {
   margin: 0;
   font-size: 1.5em;
+  color: #ecf0f1;
 }
 
 .profile-details p {
   margin: 5px 0 0 0;
-  color: #555;
+  color: #bdc3c7;
 }
 
 .feed-section {
@@ -80,7 +75,7 @@ body {
 
 .spinner-container {
   display: flex;
-  justify-content: center;  
-  align-items: center;       
-  min-height: 200px;      
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }

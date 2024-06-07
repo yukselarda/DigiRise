@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './post.css'; // Stil dosyanızın doğru yolunu buraya ekleyin
+import './post.css';
 import Cookies from 'js-cookie';
 import { Avatar } from '@mui/material';
 import { Puff } from 'react-loader-spinner';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import Header from '../../components/headers/Header';
 
 function CreatePostPage() {
   const [comment, setComment] = useState('');
@@ -110,6 +111,9 @@ function CreatePostPage() {
 
   return (
     <div className="post-page">
+
+      <Header />
+
       {isLoading ? (
         <div className="loader-container">
           <Puff color="#00BFFF" height={100} width={100} />

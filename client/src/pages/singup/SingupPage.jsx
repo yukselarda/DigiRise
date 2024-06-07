@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSpring, animated } from '@react-spring/web';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Cookies from 'js-cookie';
 import "./singup.css"
 
@@ -64,7 +64,7 @@ function SingupPage() {
           <button type="submit">Giriş Yap</button>
         </form>
         <div className="alternative">
-          Hesabın yok mu? <a href="/register">Kayıt Ol</a>
+          Hesabın yok mu? <Link to="/register">Kayıt Ol</Link>
         </div>
       </animated.div>
       <ToastContainer />

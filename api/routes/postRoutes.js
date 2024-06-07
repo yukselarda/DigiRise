@@ -46,9 +46,6 @@ router.post("/add", upload.single('img'), async (req, res) => {
 });
 
 
-
-// Diğer Rotalar
-
 router.get("/get-all", async (req, res) => {
     try {
       const posts = await Post.find().populate("userId").sort({ createdAt: -1 }); // En yeni gönderiler önce gelecek şekilde sıralama
