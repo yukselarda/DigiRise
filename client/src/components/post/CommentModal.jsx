@@ -1,5 +1,5 @@
 import React from 'react';
-import "./post.css";
+import './post.css'
 
 function CommentModal({ isOpen, onClose, onSubmit }) {
   const [comment, setComment] = React.useState('');

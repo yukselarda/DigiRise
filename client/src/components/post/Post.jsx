@@ -74,10 +74,12 @@ function Post({ post }) {
 
   const handleCommentClick = () => {
     setIsModalOpen(true);
+    console.log("açıldım")
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    console.log("kapandım");
   };
 
   const handleCommentSubmit = (comment) => {

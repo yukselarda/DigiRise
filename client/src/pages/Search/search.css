@@ -31,14 +31,6 @@
     color: #AAB7B8;
 }
 
-.search-input:-ms-input-placeholder {
-    color: #AAB7B8;
-}
-
-.search-input::-ms-input-placeholder {
-    color: #AAB7B8;
-}
-
 .search-input:focus {
     border-color: #4169E1;
     box-shadow: 0 0 5px rgba(65, 105, 225, 0.5);
@@ -65,31 +57,18 @@
 }
 
 .search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     width: 100%;
     max-width: 900px;
 }
 
-.user-card {
-    border: 1px solid #5D6D7E;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    background-color: #34495E;
-    color: white;
-}
-
-.user-card img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 10px;
-}
-
 .loading {
     text-align: center;
     margin-top: 20px;
+}
+
+.user_none{
+    color: white;
 }
