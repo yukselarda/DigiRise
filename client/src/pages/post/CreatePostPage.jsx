@@ -125,7 +125,6 @@ function CreatePostPage() {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className="description-input"
-            required
           />
           <div className="image-section">
             <input

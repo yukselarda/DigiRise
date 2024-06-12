@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 import './update.css';
 
 function UpdateProfilePage() {
@@ -21,18 +23,21 @@ function UpdateProfilePage() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchUserData = async () => {
             const userData = Cookies.get('user');
             if (userData) {
-                setUser(JSON.parse(userData));
+                const parsedUser = JSON.parse(userData);
+                setUser(parsedUser);
                 setFormData({
-                    newUsername: JSON.parse(userData).username,
-                    email: JSON.parse(userData).email,
-                    customername: JSON.parse(userData).customername,
-                    img: JSON.parse(userData).img,
+                    newUsername: parsedUser.username,
+                    email: parsedUser.email,
+                    customername: parsedUser.customername,
+                    img: parsedUser.img,
                 });
-                setSelectedImage(JSON.parse(userData).img);
+                setSelectedImage(parsedUser.img);
             }
             setIsLoading(false);
         };
@@ -98,6 +103,11 @@ function UpdateProfilePage() {
                 const updatedUser = { ...user, ...formData };
                 Cookies.set('user', JSON.stringify(updatedUser));
                 setUser(updatedUser);
+
+                // Redirect to home page after a short delay
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000); // 2 seconds delay
             } else {
                 toast.error('Güncelleme sırasında bir hata oluştu.');
                 setError(response.data.error || 'Bilinmeyen bir hata oluştu.');

@@ -4,25 +4,22 @@ const router = express.Router();
 const Post = require("../models/Post");
 const path = require('path');
 
-// Multer ayarları (Depolama klasörü hatası için güncelleme)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads/')); // Proje dizinine göre uploads klasörü
+    cb(null, path.join(__dirname, '../uploads/')); 
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
-const upload = multer({ storage }); // storage'ı kullanarak upload nesnesi oluşturulur
+const upload = multer({ storage });
 
 
-// Dosya ekleme ( Hata yönetimi ve doğrulama geliştirildi )
 router.post("/add", upload.single('img'), async (req, res) => {
   try {
     const { comment, userId, username } = req.body;
 
-    // Dosya yükleme hatası kontrolü
     if (!req.file) {
       return res.status(400).json({ message: "Dosya yüklenemedi." });
     }
@@ -30,8 +27,7 @@ router.post("/add", upload.single('img'), async (req, res) => {
     const imgPath = req.file.path.split('api\\')[1];
     console.log("test", imgPath)
 
-    // Gerekli alanların kontrolü
-    if (!imgPath || !comment || !userId || !username) {
+if (!imgPath ||!userId || !username) {
       return res.status(400).json({ message: "Gerekli alanlar eksik." });
     }
 
@@ -48,7 +44,7 @@ router.post("/add", upload.single('img'), async (req, res) => {
 
 router.get("/get-all", async (req, res) => {
   try {
-    const posts = await Post.find().populate("userId").sort({ createdAt: -1 }); // En yeni gönderiler önce gelecek şekilde sıralama
+    const posts = await Post.find().populate("userId").sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
     console.error('Error fetching posts:', error);
