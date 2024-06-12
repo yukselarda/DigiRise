@@ -80,7 +80,7 @@ function UpdateProfilePage() {
         try {
             setIsLoading(true);
 
-            const response = await axios.put(`http://localhost:5000/api/users/update/${user.username}`,
+            const response = await axios.put(`http://localhost:5000/api/auth/update/${user.username}`,
                 updatedFormData,
                 {
                     headers: {
@@ -113,7 +113,7 @@ function UpdateProfilePage() {
     return (
         <form className='update-profile-form' onSubmit={handleSubmit}>
             <div className='form-group'>
-                <label htmlFor="newUsername">Ad ve Soyad:</label>
+                <label htmlFor="newUsername">Kullanıcı adı:</label>
                 <input
                     type="text"
                     id="newUsername"
@@ -135,7 +135,7 @@ function UpdateProfilePage() {
             </div>
 
             <div className='form-group'>
-                <label htmlFor="customername">Kullanıcı adı:</label>
+                <label htmlFor="customername">Ad ve soyad:</label>
                 <input
                     type="text"
                     id="customername"
