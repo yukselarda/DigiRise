@@ -157,7 +157,7 @@ function Post({ post }) {
         <CardMedia
           component="img"
           height="400"
-          image={`http://localhost:5000/${post.img}`}
+          image={`http://localhost:5000/uploads/${post.img}`}
           alt="post-img"
         />
       )}
