@@ -1,19 +1,27 @@
 import React from 'react';
-import './post.css'
+import './post.css';
+import axios from 'axios';
 
-function CommentModal({ isOpen, onClose, onSubmit }) {
+function CommentModal({ isOpen, onClose, postId, onSubmit }) {
   const [comment, setComment] = React.useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(comment);
-    setComment('');
-    onClose();
+    
+    try {
+      const response = await axios.post(`http://localhost:5000/api/comments/${postId}`, { comment });
+      if (!response.data) {
+        throw new Error('Yorum gönderilemedi.');
+      }
+      setComment('');
+      onClose();
+      onSubmit();
+    } catch (error) {
+      console.error('Yorum gönderme hatası:', error);
+    }
   };
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
     <div className="modal">

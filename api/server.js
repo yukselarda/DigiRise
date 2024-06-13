@@ -10,6 +10,7 @@ const port = 5000;
 const authRoute = require("./routes/authRoutes");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
+const commentRoute = require("./routes/commentRoutes");
 
 dotenv.config();
 console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
@@ -55,7 +56,9 @@ app.use('/uploads', express.static('uploads'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
-app.use("/api/posts", postRoute);   
+app.use("/api/posts", postRoute);
+app.use("/api/comments", commentRoute);
+
 
 app.listen(port, () => {
     connect();

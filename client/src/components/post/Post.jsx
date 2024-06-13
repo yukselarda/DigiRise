@@ -10,6 +10,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { styled } from '@mui/material/styles';
 import CommentModal from './CommentModal';
 import { Link } from 'react-router-dom';
+import SharePopup from './SharePopup';
 
 const PostCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(45deg, #2C3E50, #1E1F29)',
@@ -74,6 +75,8 @@ function Post({ post }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const handleCommentClick = () => {
     setIsModalOpen(true);
@@ -83,8 +86,14 @@ function Post({ post }) {
     setIsModalOpen(false);
   };
 
-  const handleCommentSubmit = (comment) => {
-    console.log('Yorum gönderildi:', comment);
+  const handleCommentSubmit = async (comment) => {
+    try {
+      const response = await axios.post(`http://localhost:5000/api/comments/${post._id}`, { comment });
+      console.log('Yorum gönderildi:', response.data);
+      fetchComments();
+    } catch (error) {
+      console.error('Yorum gönderme hatası:', error);
+    }
   };
 
   const fetchLikes = async () => {
@@ -95,7 +104,16 @@ function Post({ post }) {
     } catch (error) {
       console.error('Beğeni bilgisi alınamadı:', error);
     } finally {
-      setLoading(false); // Fetch işlemi tamamlandığında loading durumunu false yap
+      setLoading(false);
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/comments/${post._id}`);
+      setComments(response.data);
+    } catch (error) {
+      console.error('Yorumlar alınamadı:', error);
     }
   };
 
@@ -109,8 +127,13 @@ function Post({ post }) {
     }
   };
 
+  const handleShareClick = () => {
+    setIsShareOpen(true);
+  };
+
   useEffect(() => {
     fetchLikes();
+    fetchComments();
   }, []);
 
   return (
@@ -167,7 +190,7 @@ function Post({ post }) {
           <ModeCommentOutlinedIcon />
         </IconButtonStyled>
 
-        <IconButtonStyled aria-label="share">
+        <IconButtonStyled aria-label="share" onClick={handleShareClick}>
           <ShareIcon />
         </IconButtonStyled>
 
@@ -183,17 +206,37 @@ function Post({ post }) {
         {loading ? (
           <Skeleton variant="text" />
         ) : (
-          <BodyText variant="body1">
-            {post.comment}
-          </BodyText>
+          <>
+            <BodyText variant="body1">
+              {post.comment}
+            </BodyText>
+
+            <div style={{ marginTop: '10px' }}>
+              {comments.map((comment) => (
+                <div key={comment._id} style={{ marginBottom: '5px' }}>
+                  <Typography variant="body2" style={{ color: '#bdc3c7' }}>
+                    <Link to={`/user/${comment.userId.username}`} style={{ color: '#1abc9c', textDecoration: 'none' }}>
+                      {comment.userId.username}
+                    </Link>
+                    : {comment.text}
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </CardContent>
 
       <CommentModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        postId={post._id}
         onSubmit={handleCommentSubmit}
       />
+
+      {isShareOpen && (
+        <SharePopup onClose={() => setIsShareOpen(false)} />
+      )}
     </PostCard>
   );
 }

@@ -15,22 +15,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Yeni bir gönderi eklemek için endpoint
 router.post("/add", upload.single('img'), async (req, res) => {
   try {
-    const { comment, userId, username } = req.body;
+    const { comment, userId, username, follower_comment } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ message: "Dosya yüklenemedi." });
     }
 
     const imgPath = req.file.path.split('uploads\\')[1];
-    console.log("test", imgPath)
 
     if (!imgPath || !userId || !username) {
       return res.status(400).json({ message: "Gerekli alanlar eksik." });
     }
 
-    const newPost = new Post({ img: imgPath, comment, userId, username });
+    const newPost = new Post({ img: imgPath, comment, userId, username, follower_comment });
     const savedPost = await newPost.save();
 
     res.status(201).json(savedPost);
@@ -40,16 +40,18 @@ router.post("/add", upload.single('img'), async (req, res) => {
   }
 });
 
+// Tüm gönderileri getirmek için endpoint
 router.get("/get-all", async (req, res) => {
   try {
     const posts = await Post.find().populate("userId").sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Gönderileri getirme hatası:', error);
     res.status(500).json({ message: error.message });
   }
 });
 
+// Belirli bir gönderiyi getirmek için endpoint
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -63,13 +65,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Bir gönderiyi güncellemek için endpoint
 router.put("/update/:id", upload.single('img'), async (req, res) => {
   const { id } = req.params;
-  const { comment } = req.body;
-  const imgPath = req.file ? req.file.path : null;
+  const { comment, follower_comment } = req.body;
+  const imgPath = req.file ? req.file.path.split('uploads\\')[1] : null;
 
   try {
-    const updateData = { comment };
+    const updateData = { comment, follower_comment };
     if (imgPath) {
       updateData.img = imgPath;
     }
@@ -88,6 +91,7 @@ router.put("/update/:id", upload.single('img'), async (req, res) => {
   }
 });
 
+// Bir gönderiyi silmek için endpoint
 router.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -101,6 +105,7 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
+// Beğenileri getirmek için endpoint
 router.get('/:postId/likes', async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -121,12 +126,12 @@ router.get('/:postId/likes', async (req, res) => {
   }
 });
 
-// Bir gönderinin beğeni durumunu değiştirmek için bir yol
+// Bir gönderiyi beğenmek için endpoint
 router.post('/:postId/like', async (req, res) => {
   try {
     const postId = req.params.postId;
     const userId = req.body.userId;
-    console.log(userId);
+
     if (!userId) {
       console.error('Kullanıcı kimliği eksik.');
       return res.status(400).json({ message: 'Kullanıcı kimliği eksik.' });
