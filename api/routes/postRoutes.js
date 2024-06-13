@@ -2,11 +2,12 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const Post = require("../models/Post");
+const jwt = require('jsonwebtoken'); // JWT paketi eklendi
 const path = require('path');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads/')); 
+    cb(null, path.join(__dirname, '../uploads/'));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -14,7 +15,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
 
 router.post("/add", upload.single('img'), async (req, res) => {
   try {
@@ -24,10 +24,10 @@ router.post("/add", upload.single('img'), async (req, res) => {
       return res.status(400).json({ message: "Dosya yüklenemedi." });
     }
 
-    const imgPath = req.file.path.split('api\\')[1];
+    const imgPath = req.file.path.split('uploads\\')[1];
     console.log("test", imgPath)
 
-if (!imgPath ||!userId || !username) {
+    if (!imgPath || !userId || !username) {
       return res.status(400).json({ message: "Gerekli alanlar eksik." });
     }
 
@@ -40,7 +40,6 @@ if (!imgPath ||!userId || !username) {
     res.status(500).json({ message: "Sunucu hatası: Gönderi eklenemedi." });
   }
 });
-
 
 router.get("/get-all", async (req, res) => {
   try {
@@ -64,7 +63,6 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 router.put("/update/:id", upload.single('img'), async (req, res) => {
   const { id } = req.params;
@@ -101,6 +99,58 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(200).json({ message: "Gönderi silindi" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+router.get("/:postId/likes", async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Gönderi bulunamadı" });
+    }
+
+    const userId = req.user ? req.user._id : null;
+    const liked = userId && post.likes.includes(userId);
+    const likeCount = post.likes.length;
+
+    res.status(200).json({ liked, likeCount });
+  } catch (error) {
+    console.error("Beğeni bilgisi alma hatası:", error);
+    res.status(500).json({ message: "Sunucu hatası: Beğeni bilgisi alınamadı." });
+  }
+});
+
+router.post("/:postId/like", async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const token = req.cookies.token;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY); 
+    const userId = decodedToken.userId;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Gönderi bulunamadı" });
+    }
+
+    const likedIndex = post.likes.indexOf(userId);
+    if (likedIndex > -1) {
+      post.likes.splice(likedIndex, 1);
+    } else {
+      post.likes.push(userId);
+    }
+
+    await post.save();
+    const likeCount = post.likes.length;
+
+    res.status(200).json({ liked: likedIndex === -1, likeCount });
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Geçersiz veya süresi dolmuş oturum' });
+    }
+    console.error("Beğeni işlemi hatası:", error);
+    res.status(500).json({ message: "Sunucu hatası" });
   }
 });
 

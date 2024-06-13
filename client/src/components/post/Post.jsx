@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Card, CardMedia, CardContent, CardActions, Avatar, Typography, IconButton, Skeleton, CardHeader
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { styled } from '@mui/material/styles';
 import CommentModal from './CommentModal';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 
 const PostCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(45deg, #2C3E50, #1E1F29)',
@@ -69,8 +73,11 @@ const gradientAnimation = {
 };
 
 function Post({ post }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleCommentClick = () => {
     setIsModalOpen(true);
@@ -87,20 +94,57 @@ function Post({ post }) {
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    const fetchLikeData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/posts/${post._id}/likes`);
+        setLiked(response.data.liked);
+        setLikeCount(response.data.likeCount);
+      } catch (error) {
+        console.error("Beğeni işlemi hatası:", error);
+        enqueueSnackbar('Beğeni işlemi başarısız oldu.', { variant: 'error' });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLikeData();
+  }, [post._id, enqueueSnackbar]);
 
-    if (post && post.userId) {
-      setIsLoading(false);
-    } else {
-      console.error("Post or userId data is missing:", post);
+  const handleLikeClick = async () => {
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`http://localhost:5000/api/posts/${post._id}/like`, null, { withCredentials: true });
+      setLiked(response.data.liked);
+      setLikeCount(response.data.likeCount);
+    } catch (error) {
+      console.error("Beğeni işlemi hatası:", error);
+
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            enqueueSnackbar('Oturumunuzun süresi doldu veya geçersiz.', { variant: 'error' });
+            break;
+          case 404:
+            enqueueSnackbar('Gönderi bulunamadı.', { variant: 'error' });
+            break;
+          default:
+            enqueueSnackbar('Beğeni işlemi başarısız oldu.', { variant: 'error' });
+        }
+      } else {
+        enqueueSnackbar('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', { variant: 'error' });
+      }
+    } finally {
+      setLoading(false);
     }
-  }, [post]);
+  };
+
 
   return (
     <PostCard>
       <CardHeader
         avatar={
-          isLoading || !post.userId || !post.userId.img ? (
+          loading || !post.userId || !post.userId.img ? (
             <Skeleton variant="circular" width={40} height={40} />
           ) : (
             <Avatar
@@ -109,13 +153,14 @@ function Post({ post }) {
             />
           )
         }
+
         action={
           <IconButtonStyled aria-label="settings">
             <MoreVertIcon />
           </IconButtonStyled>
         }
         title={
-          isLoading || !post.userId ? (
+          loading || !post.userId ? (
             <Skeleton variant="text" width={150} />
           ) : (
             <PostUsername to={`/user/${post.userId.username}`}>
@@ -124,7 +169,7 @@ function Post({ post }) {
           )
         }
         subheader={
-          isLoading ? (
+          loading ? (
             <Skeleton variant="text" width={200} />
           ) : (
             <SubheaderText variant="body2">
@@ -134,7 +179,7 @@ function Post({ post }) {
         }
       />
 
-      {isLoading ? (
+      {loading ? (
         <Skeleton variant="rectangular" height={400} />
       ) : (
         <CardMedia
@@ -146,19 +191,31 @@ function Post({ post }) {
       )}
 
       <CardActionsStyled disableSpacing>
-        <IconButtonStyled aria-label="add to favorites">
-          <FavoriteBorderIcon />
+        <IconButtonStyled
+          aria-label="add to favorites"
+          onClick={handleLikeClick}
+          disabled={loading}
+        >
+          {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButtonStyled>
+
+        {likeCount > 0 && (
+          <Typography variant="body2" color="#bdc3c7" marginLeft={1}>
+            {likeCount}
+          </Typography>
+        )}
+
         <IconButtonStyled aria-label="comment" onClick={handleCommentClick}>
           <ModeCommentOutlinedIcon />
         </IconButtonStyled>
+
         <IconButtonStyled aria-label="share">
           <ShareIcon />
         </IconButtonStyled>
       </CardActionsStyled>
 
       <CardContent>
-        {isLoading ? (
+        {loading ? (
           <Skeleton variant="text" />
         ) : (
           <BodyText variant="body1">
