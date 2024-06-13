@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const Post = require("../models/Post");
-const jwt = require('jsonwebtoken'); // JWT paketi eklendi
 const path = require('path');
 
 const storage = multer.diskStorage({
@@ -102,13 +101,13 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-router.get("/:postId/likes", async (req, res) => {
+router.get('/:postId/likes', async (req, res) => {
   try {
     const postId = req.params.postId;
     const post = await Post.findById(postId);
 
     if (!post) {
-      return res.status(404).json({ message: "Gönderi bulunamadı" });
+      return res.status(404).json({ message: 'Gönderi bulunamadı' });
     }
 
     const userId = req.user ? req.user._id : null;
@@ -117,21 +116,26 @@ router.get("/:postId/likes", async (req, res) => {
 
     res.status(200).json({ liked, likeCount });
   } catch (error) {
-    console.error("Beğeni bilgisi alma hatası:", error);
-    res.status(500).json({ message: "Sunucu hatası: Beğeni bilgisi alınamadı." });
+    console.error('Beğeni bilgisi alma hatası:', error);
+    res.status(500).json({ message: 'Sunucu hatası: Beğeni bilgisi alınamadı.' });
   }
 });
 
-router.post("/:postId/like", async (req, res) => {
+// Bir gönderinin beğeni durumunu değiştirmek için bir yol
+router.post('/:postId/like', async (req, res) => {
   try {
     const postId = req.params.postId;
-    const token = req.cookies.token;
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY); 
-    const userId = decodedToken.userId;
+    const userId = req.body.userId;
+    console.log(userId);
+    if (!userId) {
+      console.error('Kullanıcı kimliği eksik.');
+      return res.status(400).json({ message: 'Kullanıcı kimliği eksik.' });
+    }
 
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ message: "Gönderi bulunamadı" });
+      console.error('Gönderi bulunamadı:', postId);
+      return res.status(404).json({ message: 'Gönderi bulunamadı' });
     }
 
     const likedIndex = post.likes.indexOf(userId);
@@ -146,11 +150,8 @@ router.post("/:postId/like", async (req, res) => {
 
     res.status(200).json({ liked: likedIndex === -1, likeCount });
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: 'Geçersiz veya süresi dolmuş oturum' });
-    }
-    console.error("Beğeni işlemi hatası:", error);
-    res.status(500).json({ message: "Sunucu hatası" });
+    console.error('Beğeni işlemi hatası:', error);
+    res.status(400).json({ message: 'Sunucu hatası' });
   }
 });
 

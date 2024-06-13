@@ -3,16 +3,13 @@ import axios from 'axios';
 import {
   Card, CardMedia, CardContent, CardActions, Avatar, Typography, IconButton, Skeleton, CardHeader
 } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { styled } from '@mui/material/styles';
 import CommentModal from './CommentModal';
 import { Link } from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-
 
 const PostCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(45deg, #2C3E50, #1E1F29)',
@@ -73,72 +70,48 @@ const gradientAnimation = {
 };
 
 function Post({ post }) {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   const handleCommentClick = () => {
     setIsModalOpen(true);
-    console.log("açıldım")
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    console.log("kapandım");
   };
 
   const handleCommentSubmit = (comment) => {
     console.log('Yorum gönderildi:', comment);
   };
 
-  useEffect(() => {
-    const fetchLikeData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/posts/${post._id}/likes`);
-        setLiked(response.data.liked);
-        setLikeCount(response.data.likeCount);
-      } catch (error) {
-        console.error("Beğeni işlemi hatası:", error);
-        enqueueSnackbar('Beğeni işlemi başarısız oldu.', { variant: 'error' });
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLikeData();
-  }, [post._id, enqueueSnackbar]);
-
-  const handleLikeClick = async () => {
-    if (loading) return;
-    setLoading(true);
-
+  const fetchLikes = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/posts/${post._id}/like`, null, { withCredentials: true });
+      const response = await axios.get(`http://localhost:5000/api/posts/${post._id}/likes`);
       setLiked(response.data.liked);
       setLikeCount(response.data.likeCount);
     } catch (error) {
-      console.error("Beğeni işlemi hatası:", error);
-
-      if (error.response) {
-        switch (error.response.status) {
-          case 401:
-            enqueueSnackbar('Oturumunuzun süresi doldu veya geçersiz.', { variant: 'error' });
-            break;
-          case 404:
-            enqueueSnackbar('Gönderi bulunamadı.', { variant: 'error' });
-            break;
-          default:
-            enqueueSnackbar('Beğeni işlemi başarısız oldu.', { variant: 'error' });
-        }
-      } else {
-        enqueueSnackbar('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', { variant: 'error' });
-      }
+      console.error('Beğeni bilgisi alınamadı:', error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Fetch işlemi tamamlandığında loading durumunu false yap
     }
   };
 
+  const handleLikeClick = async () => {
+    try {
+      const response = await axios.post(`http://localhost:5000/api/posts/${post._id}/like`, { userId: post.userId });
+      setLiked(response.data.liked);
+      setLikeCount(response.data.likeCount);
+    } catch (error) {
+      console.error('Beğeni işlemi hatası:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLikes();
+  }, []);
 
   return (
     <PostCard>
@@ -149,11 +122,10 @@ function Post({ post }) {
           ) : (
             <Avatar
               src={`http://localhost:5000/${post.userId.img}`}
-              alt={post.username}
+              alt={post.userId.username}
             />
           )
         }
-
         action={
           <IconButtonStyled aria-label="settings">
             <MoreVertIcon />
@@ -164,7 +136,7 @@ function Post({ post }) {
             <Skeleton variant="text" width={150} />
           ) : (
             <PostUsername to={`/user/${post.userId.username}`}>
-              {post.username}
+              {post.userId.username}
             </PostUsername>
           )
         }
@@ -191,26 +163,19 @@ function Post({ post }) {
       )}
 
       <CardActionsStyled disableSpacing>
-        <IconButtonStyled
-          aria-label="add to favorites"
-          onClick={handleLikeClick}
-          disabled={loading}
-        >
-          {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </IconButtonStyled>
-
-        {likeCount > 0 && (
-          <Typography variant="body2" color="#bdc3c7" marginLeft={1}>
-            {likeCount}
-          </Typography>
-        )}
-
         <IconButtonStyled aria-label="comment" onClick={handleCommentClick}>
           <ModeCommentOutlinedIcon />
         </IconButtonStyled>
 
         <IconButtonStyled aria-label="share">
           <ShareIcon />
+        </IconButtonStyled>
+
+        <IconButtonStyled aria-label="like" onClick={handleLikeClick}>
+          <FavoriteIcon color={liked ? 'error' : 'inherit'} />
+          <Typography className='color-white' variant="body2" color="textSecondary" component="span">
+            {likeCount}
+          </Typography>
         </IconButtonStyled>
       </CardActionsStyled>
 
